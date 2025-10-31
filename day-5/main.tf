@@ -4,6 +4,9 @@ resource "aws_vpc" "name" {
   tags = {
     Name = "Day-5-vpc"
   }
+  lifecycle {
+    ignore_changes = [ tags, ]
+  }
 }
 
 resource "aws_subnet" "name1" {
@@ -11,6 +14,9 @@ resource "aws_subnet" "name1" {
   vpc_id = aws_vpc.name.id
   tags = {
     Name = "subnet-1"
+  }
+  lifecycle {
+    ignore_changes = [ tags, ]
   }
 }
 
@@ -20,6 +26,9 @@ resource "aws_subnet" "name2" {
   tags = {
     Name = "subnet-2"
   }
+  lifecycle {
+    ignore_changes = [ tags, ]
+  }
 }
 
 resource "aws_subnet" "name3" {
@@ -27,6 +36,9 @@ resource "aws_subnet" "name3" {
   vpc_id = aws_vpc.name.id
   tags = {
     Name = "subnet-3"
+  }
+  lifecycle {
+    ignore_changes = [ tags, ]
   }
 }
 
@@ -36,12 +48,18 @@ resource "aws_subnet" "name4" {
   tags = {
     Name = "subnet-4"
   }
+  lifecycle {
+    ignore_changes = [ tags, ]
+  }
 }
 
 resource "aws_internet_gateway" "name" {
   vpc_id = aws_vpc.name.id
   tags = {
     Name = "Terra_ig"
+  }
+  lifecycle {
+    ignore_changes = [ tags, ]
   }
 }
 
@@ -51,6 +69,9 @@ resource "aws_eip" "name" {
   tags = {
     Name = "nat-eip"
   }
+  lifecycle {
+    ignore_changes = [ tags, ]
+  }
 }
 
 resource "aws_nat_gateway" "name" {
@@ -58,6 +79,9 @@ resource "aws_nat_gateway" "name" {
   allocation_id = aws_eip.name.id
   tags = {
     Name = "Terra_nat"
+  }
+  lifecycle {
+    ignore_changes = [ tags, ]
   }
 }
 
@@ -70,6 +94,9 @@ resource "aws_route_table" "pub" {
   
   tags = {
     Name = "public_rt"
+  }
+  lifecycle {
+    ignore_changes = [ tags, ]
   }
 }
 
@@ -87,10 +114,13 @@ resource "aws_route_table" "pri" {
   vpc_id = aws_vpc.name.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.name.id
+    nat_gateway_id = aws_nat_gateway.name.id
   }
   tags = {
     Name = "private_rt"
+  }
+  lifecycle {
+    ignore_changes = [ tags, ]
   }
 }
 
@@ -134,6 +164,12 @@ resource "aws_route_table_association" "pri2" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  tags = {
+    Name = "terra_sg"
+  }
+  lifecycle {
+    ignore_changes = [ tags, ]
+  }
  }
 
 resource "aws_instance" "pub" {
@@ -145,6 +181,9 @@ resource "aws_instance" "pub" {
   tags = {
     Name = "public instance"
   }
+  lifecycle {
+    ignore_changes = [ tags, ]
+  }
 }
 
 resource "aws_instance" "pri" {
@@ -154,5 +193,8 @@ resource "aws_instance" "pri" {
   vpc_security_group_ids = [aws_security_group.name.id]
   tags = {
     Name = "private instance"
+  }
+  lifecycle {
+    ignore_changes = [ tags, ]
   }
 }
