@@ -198,3 +198,16 @@ resource "aws_instance" "pri" {
     ignore_changes = [ tags, ]
   }
 }
+
+resource "aws_instance" "pri2" {
+  ami = "ami-01760eea5c574eb86"
+  subnet_id = aws_subnet.name3.id
+  instance_type = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.name.id]
+  tags = {
+    Name = "private instance2"
+  }
+  lifecycle {
+    ignore_changes = [ tags, ]
+  }
+}
